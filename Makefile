@@ -1,8 +1,11 @@
-.PHONY: all clean
+.PHONY: build install clean
 
-all:
+build:
 	mkdir -p bin
-	gcc -o bin/shell src/shell.c
+	gcc -o bin/ezsh src/ezsh.c
+
+install: build
+	sudo cp bin/ezsh /usr/local/bin
 
 clean:
 	rm -rf bin
