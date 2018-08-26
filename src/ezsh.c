@@ -14,15 +14,11 @@
 int ezsh_cd(char **argv)
 {
     if(argv[1] == NULL)
-    {
         fprintf(stderr, "ezsh_cd: expected path\n");
-    }
     else
     {
         if(chdir(argv[1]) == -1)
-        {
             perror("chdir");
-        }
     }
 
     return 1;
