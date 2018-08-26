@@ -4,12 +4,14 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define CAPINIT 8
 #define DELIMS " \t\r\n\a"
+#define BUFSIZE 8
 
 int ezsh_cd(char **argv)
 {
@@ -21,6 +23,34 @@ int ezsh_cd(char **argv)
             perror("chdir");
     }
 
+    return 1;
+}
+
+int ezsh_pwd(char **argv)
+{
+    int cap = BUFSIZE;
+    char *buf = (char *) malloc(sizeof(char) * cap);
+
+    while(getcwd(buf, cap) == NULL)
+    {
+        if(errno == ERANGE)
+        {
+            cap *= 2;
+ 
+            if((buf = (char *) realloc(buf, cap)) == NULL)
+            {
+                perror("realloc");
+                return 0;
+            }
+        }
+        else
+        {
+            perror("getcwd");
+            return 0;
+        }
+    }
+
+    printf("%s\n", buf);
     return 1;
 }
 
@@ -37,12 +67,14 @@ int ezsh_exit(char ** argv)
 
 char *builtin_names[] = {
     "cd",
+    "pwd",
     "help",
     "exit"
 };
 
 int(*builtin_fps[]) (char **) = {
     &ezsh_cd,
+    &ezsh_pwd,
     &ezsh_help,
     &ezsh_exit
 };
