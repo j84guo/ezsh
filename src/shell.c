@@ -219,7 +219,7 @@ void ezsh_loop()
 
     do
     {
-        printf("> ");
+        printf("ezsh> ");
 
         line = ezsh_read_line();
         // printf("%s\n", line);
