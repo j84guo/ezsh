@@ -51,6 +51,7 @@ int ezsh_pwd(char **argv)
     }
 
     printf("%s\n", buf);
+    free(buf);
     return 1;
 }
 
